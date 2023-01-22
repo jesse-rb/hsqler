@@ -17,19 +17,26 @@ const (
 
 // Define types
 type Schema struct {
-    Name      string
-    Entities    []Entity
+    Name        string
+    Entities    []*Entity
 }
 
 type Entity struct {
     Name            string
-    Relationships   []Relationship
-    Attributes      []Attribute
+    Cardinalities   []*Cardinality
+    Attributes      []*Attribute
+}
+
+type Cardinality struct {
+    MToN            [2]int
+    Entity          *Entity
+    Relationship    *Relationship
 }
 
 type Relationship struct {
-    Type        RelationshipType
-    Attributes  Attribute
+    Type            *RelationshipType
+    Cardinalities   *Cardinality
+    Attributes      *Attribute
 }
 
 type Attribute struct {
