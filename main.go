@@ -1,8 +1,6 @@
 package main
 
-import (
-    "sqler/logger"
-)
+import "sqler/sqlparser"
 
 func init() {
 
