@@ -6,6 +6,7 @@ const (
     OneToOne RelationshipType = iota
     OneToMany
     ManyToMany
+    Unkown
 )
 
 type AttributeType int
@@ -41,5 +42,5 @@ type Relationship struct {
 
 type Attribute struct {
     Name    string
-    Type    AttributeType
+    Type    *AttributeType
 }
