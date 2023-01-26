@@ -2,6 +2,18 @@ package sqlparser
 
 import "sqler/logger"
 
-func Test() {
-    logger.LogInfo("sql_parser", "Hello from here", "lesh go")
+func Parse(fileNames []string) {
+
+}
+
+func ParseScript(line string) {
+
+}
+
+func ParseTable(line string) {
+
+}
+
+func ParseColumn(line string) {
+
 }

@@ -36,7 +36,7 @@ type Cardinality struct {
 
 type Relationship struct {
     Type            *RelationshipType
-    Cardinalities   *Cardinality
+    Cardinalities   *[2]Cardinality
     Attributes      *Attribute
 }
 
