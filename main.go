@@ -1,7 +1,10 @@
 package main
 
 import (
+	"log"
+	"os"
 	"sqler/cmdargs"
+
 	slogger "github.com/jesse-rb/slogger-go"
 )
 
@@ -14,6 +17,8 @@ func init() {
 }
 
 func main() {
-    slogger.LogInfo("main", "Some info.", 2+4)
-    slogger.LogError("main", "Some error", 4+0)
+    infoLogger := slogger.New(os.Stdout, slogger.ANSIBlue, "info", log.Lshortfile+log.Ldate);
+    errorLogger := slogger.New(os.Stdout, slogger.ANSIRed, "error", log.Lshortfile+log.Ldate);
+    infoLogger.Log("main", "Something worth noting happened", 2+4)
+    errorLogger.Log("main", "Some horrible error happened", []int{3, 5, 7})
 }

@@ -1,4 +1,2 @@
-github.com/jesse-rb/slogger-go v0.0.1 h1:Uvv5JctBrKGMv9WQJE+txWYX/XhdXZHgsLBGs144wlg=
-github.com/jesse-rb/slogger-go v0.0.1/go.mod h1:6/jDnLwF6xRprBvkdMceXsbSOukAdl2JkTZVDf6A0g8=
-github.com/jesse-rb/slogger-go v0.0.2 h1:yGTnEH9nkwik1e5GmNgjVzdVYTs6kDotjP8ZLWXgDSY=
-github.com/jesse-rb/slogger-go v0.0.2/go.mod h1:6/jDnLwF6xRprBvkdMceXsbSOukAdl2JkTZVDf6A0g8=
+github.com/jesse-rb/slogger-go v1.0.0 h1:GvuKz4NzwmGpMrgJd8vOiUK/sn4r1AEUxv4WE11iQBU=
+github.com/jesse-rb/slogger-go v1.0.0/go.mod h1:6/jDnLwF6xRprBvkdMceXsbSOukAdl2JkTZVDf6A0g8=
