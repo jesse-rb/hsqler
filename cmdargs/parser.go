@@ -98,7 +98,7 @@ func (ca *CmdArgs) toString() (string) {
 }
 
 func (a *arg) toString() (string) {
-    var s string = "\t{\n";
+    var s string = "{\n";
     s += fmt.Sprintf("\t\tname: %v,\n\t\tshort: %v,\n\t\tdesc: %v,\n\t\tusageMsg: %v,\n\t\tpresent: %v,\n\t\t,\n\t\tlength: %v\n", 
         a.name, a.short, a.desc, a.usageMsg, a.present, a.length)
     s += "\t\tvalue: [\n"
