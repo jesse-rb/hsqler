@@ -1,6 +1,7 @@
 package cmdargs
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -20,10 +21,10 @@ type arg struct {
     usageMsg string
     length int
     present bool
-    value *[]string
+    value []string
 }
 
-func NewArgs() (*CmdArgs) {
+func NewCmdArgs() (*CmdArgs) {
     infoLogger = logger.New(os.Stdout, logger.ANSIBlue, "[cmdargs]", log.Lshortfile+log.Ldate)
 
     var args map[string]*arg = make(map[string]*arg)
@@ -31,12 +32,12 @@ func NewArgs() (*CmdArgs) {
     return cmdArgs
 }
 
-func newArg(name string, short string, desc string, usageMsg string, length int, defaultValue *[]string) (*arg) {
+func newArg(name string, short string, desc string, usageMsg string, length int, defaultValue []string) (*arg) {
     var arg = &arg{name: name, short: short, desc: desc, usageMsg: usageMsg, length: length, present: false, value: defaultValue}
     return arg
 }
 
-func (ca *CmdArgs) Expect(name string, short string, desc string, usageMsg string, length int, defaultValue *[]string) {
+func (ca *CmdArgs) Expect(name string, short string, desc string, usageMsg string, length int, defaultValue []string) {
     var newArg *arg = newArg(name, short, desc, usageMsg, length, defaultValue)
     ca.args[name] = newArg
 }
@@ -49,15 +50,63 @@ func (ca *CmdArgs) Parse(osArgs []string) {
         return;
     }
 
+    var processed int = 1;
+
     // Check for the unnamed arg initially
-    if arg, ok := ca.args[osArgs[0]]; !ok {
-        infoLogger.Log("Parse()", "Trying to get arg", arg)
+    if _, ok := ca.args[osArgs[0]]; !ok {
+        if theUnnamedArg, ok := ca.args[""]; ok {
+            processed = ca.process(theUnnamedArg, osArgs, processed)
+        }
     }
     // Now check for any other named args afterwards
     for _, a := range osArgs {
-        infoLogger.Log("Parse()", "Looping over os args", a)
-        if arg, ok := ca.args[a]; ok {
-            infoLogger.Log("Parse()", "Trying to get arg", arg)
+        if theArg, ok := ca.args[a]; ok {
+            processed = ca.process(theArg, osArgs, processed);
         }
     }
+    
+    infoLogger.Log("[parse cmd args]", "finished", ca.toString())
 }
+
+func (ca *CmdArgs) process(arg *arg, osArgs []string, processed int) (int) {
+    // Arg is present
+    arg.present = true
+    if (arg.length == -1) { // Arg value has infinite capacity
+        for processed < len(osArgs) {
+            if _, ok := ca.args[osArgs[processed]]; ok {
+                break
+            }
+            arg.value = append(arg.value, osArgs[processed])
+            processed++
+        }
+    } else { // Arg value has finite capacity
+        for i := 0; i < arg.length; i++ {
+            arg.value = append(arg.value, osArgs[processed])
+            processed++
+        }
+    }
+    return processed
+}
+
+func (ca *CmdArgs) toString() (string) {
+    var s string = "args: [\n"
+    for i, a := range ca.args {
+        s += fmt.Sprintf("\t%v: %v,\n", i, a.toString())
+    }
+    s += "]"
+    return s
+}
+
+func (a *arg) toString() (string) {
+    var s string = "\t{\n";
+    s += fmt.Sprintf("\t\tname: %v,\n\t\tshort: %v,\n\t\tdesc: %v,\n\t\tusageMsg: %v,\n\t\tpresent: %v,\n\t\t,\n\t\tlength: %v\n", 
+        a.name, a.short, a.desc, a.usageMsg, a.present, a.length)
+    s += "\t\tvalue: [\n"
+    for i, v := range a.value {
+        s += fmt.Sprintf("\t\t\t%v: %v\n", i, v)
+    }
+    s += "\t\t]\n"
+    s += "\t}"
+    return s
+}
+

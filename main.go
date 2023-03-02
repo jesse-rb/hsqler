@@ -11,7 +11,7 @@ import (
 var cmdArgs *cmdargs.CmdArgs
 
 func init() {
-    cmdArgs := cmdargs.NewArgs();
+    cmdArgs := cmdargs.NewCmdArgs();
     cmdArgs.Expect("", "", "The sql file name(s) to produce an ER diagram for", "<file name 1> <file name 2> ... <file name n>", -1, nil)
     cmdArgs.Expect("--nofkc", "-n", "Try to produce without considering foreign key constraints, only relying on column names match table names", "--nofkc", 0, nil)
     cmdArgs.Parse(os.Args)
