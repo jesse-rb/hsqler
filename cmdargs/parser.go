@@ -11,10 +11,10 @@ import (
 var infoLogger *logger.Logger
 
 type CmdArgs struct {
-    args map[string]*arg
+    args map[string]*Arg
 }
 
-type arg struct {
+type Arg struct {
     name string
     short string
     desc string
@@ -27,18 +27,18 @@ type arg struct {
 func NewCmdArgs() (*CmdArgs) {
     infoLogger = logger.New(os.Stdout, logger.ANSIBlue, "[cmdargs]", log.Lshortfile+log.Ldate)
 
-    var args map[string]*arg = make(map[string]*arg)
+    var args map[string]*Arg = make(map[string]*Arg)
     var cmdArgs = &CmdArgs{ args: args }
     return cmdArgs
 }
 
-func newArg(name string, short string, desc string, usageMsg string, length int, defaultValue []string) (*arg) {
-    var arg = &arg{name: name, short: short, desc: desc, usageMsg: usageMsg, length: length, present: false, value: defaultValue}
+func newArg(name string, short string, desc string, usageMsg string, length int, defaultValue []string) (*Arg) {
+    var arg = &Arg{name: name, short: short, desc: desc, usageMsg: usageMsg, length: length, present: false, value: defaultValue}
     return arg
 }
 
 func (ca *CmdArgs) Expect(name string, short string, desc string, usageMsg string, length int, defaultValue []string) {
-    var newArg *arg = newArg(name, short, desc, usageMsg, length, defaultValue)
+    var newArg *Arg = newArg(name, short, desc, usageMsg, length, defaultValue)
     ca.args[name] = newArg
 }
 
@@ -65,10 +65,29 @@ func (ca *CmdArgs) Parse(osArgs []string) {
         }
     }
     
-    infoLogger.Log("[parse cmd args]", "finished", ca.toString())
+    infoLogger.Log("[parse cmd args]", "finished", ca.ToString())
 }
 
-func (ca *CmdArgs) process(arg *arg, osArgs []string, processed int) (int) {
+// Get an arg by a key string
+// returns nil if arg not found
+func (ca *CmdArgs) Get(key string) (*Arg) {
+    if arg, ok := ca.args[key]; ok {
+        return arg
+    }
+    return nil
+}
+
+func (a *Arg) Present() (bool) {
+    return a.present
+}
+func (a *Arg) Length() (int) {
+    return a.length;
+}
+func (a *Arg) GetValue() ([]string) {
+    return a.value
+}
+
+func (ca *CmdArgs) process(arg *Arg, osArgs []string, processed int) (int) {
     // Arg is present
     arg.present = true
     if (arg.length == -1) { // Arg value has infinite capacity
@@ -88,16 +107,16 @@ func (ca *CmdArgs) process(arg *arg, osArgs []string, processed int) (int) {
     return processed
 }
 
-func (ca *CmdArgs) toString() (string) {
+func (ca *CmdArgs) ToString() (string) {
     var s string = "args: [\n"
     for i, a := range ca.args {
-        s += fmt.Sprintf("\t%v: %v,\n", i, a.toString())
+        s += fmt.Sprintf("\t%v: %v,\n", i, a.ToString())
     }
     s += "]"
     return s
 }
 
-func (a *arg) toString() (string) {
+func (a *Arg) ToString() (string) {
     var s string = "{\n";
     s += fmt.Sprintf("\t\tname: %v,\n\t\tshort: %v,\n\t\tdesc: %v,\n\t\tusageMsg: %v,\n\t\tpresent: %v,\n\t\t,\n\t\tlength: %v\n", 
         a.name, a.short, a.desc, a.usageMsg, a.present, a.length)

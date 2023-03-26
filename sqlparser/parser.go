@@ -1,6 +1,5 @@
 package sqlparser
 
-import "sqler/logger"
 
 func Parse(fileNames []string) {
 
